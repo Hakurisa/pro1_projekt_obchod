@@ -63,7 +63,7 @@ public class Sklad extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object hodnota, int rowIndex, int columnIndex) {
-        Zbozi zbozi = seznamZbozi.get(columnIndex);
+        Zbozi zbozi = seznamZbozi.get(rowIndex);
 
         switch (columnIndex) {
             case SLOUPEC_NAZEV:

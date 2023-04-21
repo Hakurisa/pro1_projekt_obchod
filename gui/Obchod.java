@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import lib.Sklad;
 import lib.Zbozi;
+import com.formdev.flatlaf.IntelliJTheme;
 
 import javax.swing.*;
 
@@ -98,6 +99,7 @@ public class Obchod {
     }
 
     public static void vytvorHlavniOkno() {
+        IntelliJTheme.setup(Obchod.class.getResourceAsStream("/lib/flatlaf/mocha.theme.json"));
         JFrame hlavniOkno = new JFrame();
         hlavniOkno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         hlavniOkno.setTitle("Obchod");
