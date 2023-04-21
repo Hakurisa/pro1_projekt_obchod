@@ -25,7 +25,6 @@ public class Sklad extends AbstractTableModel {
     }
 
     public Zbozi getZbozi(int index) {
-        //TODO: kontrola jestli index existuje
         try {
             return seznamZbozi.get(index);
         } catch(IndexOutOfBoundsException e) {
@@ -36,7 +35,6 @@ public class Sklad extends AbstractTableModel {
     }
 
     public void smazatZbozi(int index) {
-        //TODO: kontrola jestli index existuje
         if (index >= 0 && index < seznamZbozi.size()) {
             seznamZbozi.remove(index);
             fireTableRowsDeleted(index, index);

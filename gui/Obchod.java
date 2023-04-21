@@ -3,6 +3,8 @@ package gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import lib.Kosik;
 import lib.Sklad;
 import lib.Zbozi;
 import com.formdev.flatlaf.IntelliJTheme;
@@ -15,12 +17,16 @@ public class Obchod {
     private JMenuBar nabidka;
     private JPanel panelSkladu;
     private JTable tabulkaSkladu;
+    private JPanel panelKosiku;
+    private JTable tabulkaKosiku;
 
 
     private Sklad sklad;
+    private Kosik kosik;
 
     public Obchod() {
         sklad = new Sklad();
+        kosik = new Kosik();
 
         vytvorKomponenty();
     }
@@ -35,9 +41,13 @@ public class Obchod {
     private void vytvorKomponenty() {
         vytvorNabidku();
         vytvorPanelSkladu();
+        vytvorPanelKosiku();
         
         hlavniPanel = new JPanel(); 
-        hlavniPanel.add(panelSkladu);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        hlavniPanel.add(tabbedPane);
+        tabbedPane.addTab("Sklad", panelSkladu);
+        tabbedPane.addTab("Kosik", panelKosiku);
     }
 
     private void vytvorPanelSkladu() {
@@ -65,7 +75,7 @@ public class Obchod {
         //english comment because coding in czech physically hurts me sorry
         tabulkaSkladu.getSelectionModel().addListSelectionListener((e) -> {
             int radek = tabulkaSkladu.getSelectedRow();
-            System.out.println("tabulka " + radek);
+            //apparently when nothing is selected it reports as -1 so this works don't question it
             if(radek < 0) {
                 btSmaz.setEnabled(false);
             } else {
@@ -119,6 +129,17 @@ public class Obchod {
         nabidka = new JMenuBar();
         nabidka.add(menuSoubor);
         nabidka.add(menuNapoveda);
+    }
+
+    private void vytvorPanelKosiku() {
+        tabulkaKosiku = new JTable();
+        tabulkaKosiku.setModel(kosik);
+        tabulkaKosiku.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabulkaKosiku.setFillsViewportHeight(true);
+        JScrollPane spTabulkaKosiku = new JScrollPane(tabulkaKosiku);
+        panelKosiku = new JPanel();
+        panelKosiku.setLayout(new BorderLayout());
+        panelKosiku.add(spTabulkaKosiku, BorderLayout.CENTER);
     }
 
     public static void vytvorHlavniOkno() {
