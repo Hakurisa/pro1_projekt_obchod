@@ -57,7 +57,23 @@ public class Obchod {
         pnTlacitka.add(btPridej);
         pnTlacitka.add(btSmaz);
         pnTlacitka.add(btSmazVse);
+        
+        btSmaz.setEnabled(false);
 
+        
+        //checks if a row is selected and if yes, enables the delete button
+        //english comment because coding in czech physically hurts me sorry
+        tabulkaSkladu.getSelectionModel().addListSelectionListener((e) -> {
+            int radek = tabulkaSkladu.getSelectedRow();
+            System.out.println("tabulka " + radek);
+            if(radek < 0) {
+                btSmaz.setEnabled(false);
+            } else {
+                btSmaz.setEnabled(true);
+            }
+        });
+
+        
         btPridej.addActionListener((e)-> {
             sklad.pridejZbozi(new Zbozi("-", 0, 0));
         });
@@ -66,6 +82,13 @@ public class Obchod {
             int radek = tabulkaSkladu.getSelectedRow();
             System.out.println(radek);
             sklad.smazatZbozi(radek);
+        });
+
+        btSmazVse.addActionListener((e) -> {
+            int confrimDialog = JOptionPane.showConfirmDialog(null, "Smažete všechny položky v tabulce!\nOpravdu chcete pokračovat?", "Varování!" ,JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if(confrimDialog == JOptionPane.YES_OPTION) {
+                sklad.smazatVsechnoZbozi();
+            }
         });
 
         panelSkladu = new JPanel();

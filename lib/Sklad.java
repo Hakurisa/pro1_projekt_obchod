@@ -20,14 +20,19 @@ public class Sklad extends AbstractTableModel {
     public void pridejZbozi(Zbozi zbozi) {
         seznamZbozi.add(zbozi);
         int radek = seznamZbozi.size()-1;
-        System.out.println("ŘÁDEK VĚC" + radek);
         fireTableChanged(null);
         fireTableCellUpdated(radek, radek);
     }
 
     public Zbozi getZbozi(int index) {
         //TODO: kontrola jestli index existuje
-        return seznamZbozi.get(index);
+        try {
+            return seznamZbozi.get(index);
+        } catch(IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("Na tomto indexu žádné zboží neexistuje! Index: " + index + " Délka listu: " + seznamZbozi.size());
+        }
+
+
     }
 
     public void smazatZbozi(int index) {
@@ -40,6 +45,7 @@ public class Sklad extends AbstractTableModel {
 
     public void smazatVsechnoZbozi() {
         seznamZbozi.clear();
+        fireTableChanged(null);
     }
 
     @Override
