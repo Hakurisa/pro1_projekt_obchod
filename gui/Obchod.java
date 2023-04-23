@@ -96,7 +96,12 @@ public class Obchod {
         btKosikPridej.addActionListener((e) -> {
             int radek = tabulkaSkladu.getSelectedRow();
             Zbozi zbozi = sklad.getZbozi(radek);
-            kosik.pridej(zbozi);
+            //TODO: make this better
+            if(zbozi.getPocet() <= 0) {
+                JOptionPane.showMessageDialog(null, "Na skladě již žádný produkt " + zbozi.getNazev() + " není!", "Varování", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                kosik.pridej(zbozi);
+            }
         });
 
         btSmaz.addActionListener((e) -> {
