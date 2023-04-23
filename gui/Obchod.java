@@ -61,14 +61,17 @@ public class Obchod {
         JButton btPridej = new JButton("Přidat");
         JButton btSmaz = new JButton("Smazat");
         JButton btSmazVse = new JButton("Smazat vše");
+        JButton btKosikPridej = new JButton("Přidat do košíku");
 
         JPanel pnTlacitka = new JPanel();
         pnTlacitka.setLayout(new GridLayout(0, 1));
         pnTlacitka.add(btPridej);
+        pnTlacitka.add(btKosikPridej);
         pnTlacitka.add(btSmaz);
         pnTlacitka.add(btSmazVse);
         
         btSmaz.setEnabled(false);
+        btKosikPridej.setEnabled(false);
 
         
         //checks if a row is selected and if yes, enables the delete button
@@ -78,14 +81,22 @@ public class Obchod {
             //apparently when nothing is selected it reports as -1 so this works don't question it
             if(radek < 0) {
                 btSmaz.setEnabled(false);
+                btKosikPridej.setEnabled(false);
             } else {
                 btSmaz.setEnabled(true);
+                btKosikPridej.setEnabled(true);
             }
         });
 
         
         btPridej.addActionListener((e)-> {
             sklad.pridejZbozi(new Zbozi("-", 0, 0));
+        });
+
+        btKosikPridej.addActionListener((e) -> {
+            int radek = tabulkaSkladu.getSelectedRow();
+            Zbozi zbozi = sklad.getZbozi(radek);
+            kosik.pridej(zbozi);
         });
 
         btSmaz.addActionListener((e) -> {

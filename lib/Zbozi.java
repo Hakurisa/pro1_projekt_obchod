@@ -41,7 +41,7 @@ public class Zbozi {
 
     @Override
     public String toString() {
-        return nazev + " (" + Float.toString(cena) + " Kč";
+        return nazev;
     }
 
 

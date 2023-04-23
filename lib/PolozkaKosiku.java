@@ -2,12 +2,21 @@ package lib;
 
 public class PolozkaKosiku {
     private Zbozi zbozi;
+    private float cena;
     private int pocet;
 
 
     public PolozkaKosiku(Zbozi zbozi, int pocet) {
         this.zbozi = zbozi;
         this.pocet = pocet;
+    }
+
+    public float getCena() {
+        return this.cena;
+    }
+
+    public void setCena(float cena) {
+        this.cena = cena;
     }
 
     public Zbozi getZbozi() {
@@ -30,7 +39,8 @@ public class PolozkaKosiku {
         ++pocet;
     }
     public void snizit() {
-        //TODO: protekce proti zapornemu cislu
-        --pocet;
+        if(pocet > 0) {
+            --pocet;
+        }
     }
 }
