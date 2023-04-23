@@ -19,9 +19,9 @@ public class Sklad extends AbstractTableModel {
 
     public void pridejZbozi(Zbozi zbozi) {
         seznamZbozi.add(zbozi);
-        int radek = seznamZbozi.size()-1;
+        //int radek = seznamZbozi.size()-1;
         fireTableChanged(null);
-        fireTableCellUpdated(radek, radek);
+        //fireTableCellUpdated(radek, radek);
     }
 
     public Zbozi getZbozi(int index) {
