@@ -21,9 +21,18 @@ public class Kosik extends AbstractTableModel {
     //TODO: kontroly pro snad vsechny metody (jestli existuje index atd)
     //pridej
     public void pridej(Zbozi zbozi) {
-        //TODO: kontrola, jestli tam zbozi uz je
+
+        //kontroluje, jestli produkt již existuje v košíku
+        //pokud ano, zvýší počet daného produktu o jeden
+        boolean bruh = false;
         PolozkaKosiku polozkaKosiku = new PolozkaKosiku(zbozi, 1);
-        if(!seznamPolozek.contains(polozkaKosiku)) {
+        for (PolozkaKosiku kos : seznamPolozek) {
+            if(kos.getZbozi().equals(polozkaKosiku.getZbozi())) {
+                bruh = true;
+                kos.zvysit();
+            }
+        }
+        if(!bruh) {
             seznamPolozek.add(polozkaKosiku);
             polozkaKosiku.setCena(zbozi.getCena());
         }
