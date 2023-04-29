@@ -1,5 +1,8 @@
 package lib;
 
+import serdes.SerDes;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -44,6 +47,15 @@ public class Sklad extends AbstractTableModel {
     public void smazatVsechnoZbozi() {
         seznamZbozi.clear();
         fireTableChanged(null);
+    }
+
+    public void nacti(SerDes serdes, String soubor) throws IOException {
+        seznamZbozi = serdes.nacti(soubor);
+        fireTableDataChanged();
+    }
+
+    public void uloz(SerDes serdes, String soubor) throws IOException {
+        serdes.uloz(soubor, seznamZbozi);
     }
 
     @Override
