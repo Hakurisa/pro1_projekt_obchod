@@ -124,6 +124,7 @@ public class Obchod {
             if(confrimDialog == JOptionPane.YES_OPTION) {
                 sklad.smazatVsechnoZbozi();
                 kosik.smazatVsechnoZbozi();
+                lbCena.setText(kosik.cenaCelkem());
             }
         });
 
