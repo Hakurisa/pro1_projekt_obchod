@@ -49,6 +49,14 @@ public class Sklad extends AbstractTableModel {
         fireTableChanged(null);
     }
 
+    public void odeberJednoZbozi(int index) {
+        if (index >= 0 && index < seznamZbozi.size()) {
+           Zbozi zbozi = seznamZbozi.get(index);
+           zbozi.setPocet(zbozi.getPocet()-1);
+           fireTableCellUpdated(index, SLOUPEC_POCET);
+        }
+
+    }
     public void nacti(SerDes serdes, String soubor) throws IOException {
         seznamZbozi = serdes.nacti(soubor);
         fireTableDataChanged();

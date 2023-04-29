@@ -11,6 +11,7 @@ import com.formdev.flatlaf.IntelliJTheme;
 import serdes.GsonSerDes;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Obchod {
 
@@ -102,6 +103,7 @@ public class Obchod {
                 JOptionPane.showMessageDialog(null, "Na skladě již žádný produkt " + zbozi.getNazev() + " není!", "Varování", JOptionPane.PLAIN_MESSAGE);
             } else {
                 kosik.pridej(zbozi);
+                sklad.odeberJednoZbozi(radek);
             }
         });
 
@@ -147,6 +149,7 @@ public class Obchod {
         miNactiJson.addActionListener((e) -> {
             try {
                 JFileChooser dialog = new JFileChooser(".");
+                dialog.setFileFilter(new FileNameExtensionFilter("*.json", "json"));
                 if (dialog.showOpenDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
                     String soubor = dialog.getSelectedFile().getPath();
                     sklad.nacti(new GsonSerDes(), soubor);
@@ -163,9 +166,10 @@ public class Obchod {
         miUlozJson.addActionListener((e) -> {
             try {
                 JFileChooser dialog = new JFileChooser(".");
+                dialog.setFileFilter(new FileNameExtensionFilter("*.json", "json"));
                 if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
                     String soubor = dialog.getSelectedFile().getPath();
-                    sklad.uloz(new GsonSerDes(), soubor);
+                    sklad.uloz(new GsonSerDes(), soubor + ".json");
                 }
             } catch (Exception exp) {
                 JOptionPane.showMessageDialog(hlavniPanel,
