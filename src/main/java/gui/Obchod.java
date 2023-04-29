@@ -123,6 +123,7 @@ public class Obchod {
             int confrimDialog = JOptionPane.showConfirmDialog(null, "Smažete všechny položky v tabulce!\nOpravdu chcete pokračovat?", "Varování!" ,JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if(confrimDialog == JOptionPane.YES_OPTION) {
                 sklad.smazatVsechnoZbozi();
+                kosik.smazatVsechnoZbozi();
             }
         });
 

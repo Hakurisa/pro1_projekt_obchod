@@ -67,6 +67,11 @@ public class Kosik extends AbstractTableModel {
         fireTableCellUpdated(index, SLOUPEC_POCET);
     }
 
+    public void smazatVsechnoZbozi() {
+        seznamPolozek.clear();
+        fireTableChanged(null);
+    }
+
     public String cenaCelkem() {
         float cena = 0;
         String result = "";
