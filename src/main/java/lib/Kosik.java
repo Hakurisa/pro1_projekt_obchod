@@ -40,6 +40,16 @@ public class Kosik extends AbstractTableModel {
     //odeber
     public void odeber(int index) {
         seznamPolozek.remove(index);
+        fireTableChanged(null);
+    }
+    public void odeber(Zbozi zbozi) {
+        PolozkaKosiku polozkaKosiku = new PolozkaKosiku(zbozi, 1);
+        for (PolozkaKosiku kos : seznamPolozek) {
+            if(kos.getZbozi().equals(polozkaKosiku.getZbozi())) {
+                seznamPolozek.remove(kos);
+                break;
+            }
+        }
     }
     //vysypat
     public void vysypat(){
@@ -48,11 +58,23 @@ public class Kosik extends AbstractTableModel {
     //zvysit
     public void zvysit(int index) {
         seznamPolozek.get(index).zvysit();
+        fireTableCellUpdated(index, SLOUPEC_POCET);
 
     }
     //snizit
     public void snizit(int index) {
         seznamPolozek.get(index).snizit();
+        fireTableCellUpdated(index, SLOUPEC_POCET);
+    }
+
+    public String cenaCelkem() {
+        float cena = 0;
+        String result = "";
+        for (PolozkaKosiku kos : seznamPolozek) {
+            cena += kos.getCena()*kos.getPocet();
+        }
+        result = Float.toString(cena);
+        return result;
     }
 
     public String getColumnName(int columnIndex) {

@@ -55,6 +55,33 @@ public class Sklad extends AbstractTableModel {
            zbozi.setPocet(zbozi.getPocet()-1);
            fireTableCellUpdated(index, SLOUPEC_POCET);
         }
+    }
+    public void odeberJednoZbozi(Zbozi zbozi) {
+        for (Zbozi zboz : seznamZbozi) {
+            if(zboz.equals(zbozi)){
+                zbozi.setPocet(zbozi.getPocet()-1);
+                fireTableChanged(null);
+            }
+        }
+    }
+    public void pridejJednoZbozi(Zbozi zbozi) {
+        for (Zbozi zboz : seznamZbozi) {
+            if(zboz.equals(zbozi)){
+                zbozi.setPocet(zbozi.getPocet()+1);
+                fireTableChanged(null);
+            }
+        }
+    }
+
+    public boolean checkIfZero(Zbozi zbozi) {
+        for (Zbozi zboz : seznamZbozi) {
+            if(zboz.equals(zbozi)) {
+                if(zboz.getPocet() <= 0) {
+                    return true;
+                } return false;
+            }
+        }
+        return true;
 
     }
     public void nacti(SerDes serdes, String soubor) throws IOException {

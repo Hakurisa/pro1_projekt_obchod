@@ -25,10 +25,12 @@ public class Obchod {
 
     private Sklad sklad;
     private Kosik kosik;
+    private JLabel lbCena;
 
     public Obchod() {
         sklad = new Sklad();
         kosik = new Kosik();
+        lbCena = new JLabel(kosik.cenaCelkem());
 
         vytvorKomponenty();
     }
@@ -103,14 +105,18 @@ public class Obchod {
                 JOptionPane.showMessageDialog(null, "Na skladě již žádný produkt " + zbozi.getNazev() + " není!", "Varování", JOptionPane.PLAIN_MESSAGE);
             } else {
                 kosik.pridej(zbozi);
+                lbCena.setText(kosik.cenaCelkem());
                 sklad.odeberJednoZbozi(radek);
             }
         });
 
         btSmaz.addActionListener((e) -> {
             int radek = tabulkaSkladu.getSelectedRow();
+            Zbozi zbozi = sklad.getZbozi(radek);
             System.out.println(radek);
+            kosik.odeber(zbozi);
             sklad.smazatZbozi(radek);
+            lbCena.setText(kosik.cenaCelkem());
         });
 
         btSmazVse.addActionListener((e) -> {
@@ -144,7 +150,7 @@ public class Obchod {
                 System.exit(0);
             }
         });
-        miAbout.addActionListener((e) -> JOptionPane.showMessageDialog(hlavniPanel, "uwoogh", "Herní košík omg Java momentka", JOptionPane.PLAIN_MESSAGE));
+        miAbout.addActionListener((e) -> JOptionPane.showMessageDialog(hlavniPanel, "uwoogh", "Herní košík omg Java momentka", JOptionPane.INFORMATION_MESSAGE));
         JMenuItem miNactiJson = new JMenuItem("Načti JSON");
         miNactiJson.addActionListener((e) -> {
             try {
@@ -162,7 +168,7 @@ public class Obchod {
             }
         });
 
-        JMenuItem miUlozJson = new JMenuItem("Ulož JSON");
+        JMenuItem miUlozJson = new JMenuItem("Ulož JSON jako...");
         miUlozJson.addActionListener((e) -> {
             try {
                 JFileChooser dialog = new JFileChooser(".");
@@ -191,9 +197,80 @@ public class Obchod {
         tabulkaKosiku.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabulkaKosiku.setFillsViewportHeight(true);
         JScrollPane spTabulkaKosiku = new JScrollPane(tabulkaKosiku);
+
+        //cart GUI
+
+        JButton btPridej = new JButton("Zvýšit počet");
+        JButton btOdeberJeden = new JButton("Snížit počet");
+        JButton btSmaz = new JButton("Smazat");
+        JButton btKup = new JButton("Koupit");
+
+        btPridej.setEnabled(false);
+        btOdeberJeden.setEnabled(false);
+        btSmaz.setEnabled(false);
+
+        tabulkaKosiku.getSelectionModel().addListSelectionListener((e) -> {
+            int radek = tabulkaKosiku.getSelectedRow();
+            //apparently when nothing is selected it reports as -1 so this works don't question it
+            if(radek < 0) {
+                btPridej.setEnabled(false);
+                btOdeberJeden.setEnabled(false);
+                btSmaz.setEnabled(false);
+            } else {
+                btPridej.setEnabled(true);
+                btOdeberJeden.setEnabled(true);
+                btSmaz.setEnabled(true);
+            }
+        });
+        //button action listeners
+        btPridej.addActionListener((e)-> {
+            int radek = tabulkaKosiku.getSelectedRow();
+            Zbozi zbozi = (Zbozi) tabulkaKosiku.getValueAt(radek, 0);
+            if(!sklad.checkIfZero(zbozi)) {
+                sklad.odeberJednoZbozi(zbozi);
+                kosik.zvysit(radek);
+            } else {
+                JOptionPane.showMessageDialog(hlavniPanel, "Požadované zboží již není na skladě!", "Varování", JOptionPane.WARNING_MESSAGE);
+            }
+            lbCena.setText(kosik.cenaCelkem());
+        });
+        btOdeberJeden.addActionListener((e)-> {
+            int radek = tabulkaKosiku.getSelectedRow();
+            Zbozi zbozi = (Zbozi) tabulkaKosiku.getValueAt(radek, 0);
+            kosik.snizit(radek);
+            sklad.pridejJednoZbozi(zbozi);
+            if((int) tabulkaKosiku.getValueAt(radek, 2) <= 0) {
+                kosik.odeber(radek);
+            }
+            lbCena.setText(kosik.cenaCelkem());
+        });
+        btSmaz.addActionListener((e)-> {
+            int radek = tabulkaKosiku.getSelectedRow();
+            Zbozi zbozi = (Zbozi) tabulkaKosiku.getValueAt(radek, 0);
+            int pocet = (int) tabulkaKosiku.getValueAt(radek, 2);
+            for (int i = 0; i < pocet; i++) {
+                sklad.pridejJednoZbozi(zbozi);
+            }
+            kosik.odeber(radek);
+            lbCena.setText(kosik.cenaCelkem());
+        });
+        btKup.addActionListener((e)-> {
+            JOptionPane.showMessageDialog(hlavniPanel, "bude brzy", "xdd", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        JPanel pnTlacitka = new JPanel();
+        pnTlacitka.setLayout(new GridLayout(0, 1));
+        pnTlacitka.add(lbCena);
+        pnTlacitka.add(btPridej);
+        pnTlacitka.add(btOdeberJeden);
+        pnTlacitka.add(btSmaz);
+        pnTlacitka.add(btKup);
+
+
         panelKosiku = new JPanel();
         panelKosiku.setLayout(new BorderLayout());
         panelKosiku.add(spTabulkaKosiku, BorderLayout.CENTER);
+        panelKosiku.add(pnTlacitka, BorderLayout.EAST);
     }
 
     public static void vytvorHlavniOkno() {
