@@ -238,9 +238,9 @@ public class Obchod {
                 if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
                     String soubor = dialog.getSelectedFile().getPath();
                     if(soubor.substring(soubor.length() - 4).equals(".csv")) {
-                        sklad.uloz(new GsonSerDes(), soubor);
+                        sklad.ulozDoCSV(soubor);
                     } else {
-                        sklad.uloz(new GsonSerDes(), soubor + ".csv");
+                        sklad.ulozDoCSV(soubor + ".csv");
                     }
                 }
             } catch (Exception exp) {
