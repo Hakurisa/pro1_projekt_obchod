@@ -131,7 +131,7 @@ public class Obchod {
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confrimDialog == JOptionPane.YES_OPTION) {
                 sklad.smazatVsechnoZbozi();
-                kosik.smazatVsechnoZbozi();
+                kosik.vysypat();
                 lbCena.setText(kosik.cenaCelkem());
             }
         });
@@ -167,7 +167,11 @@ public class Obchod {
                         dialog.setFileFilter(new FileNameExtensionFilter("*.json", "json"));
                         if (dialog.showSaveDialog(dialog) == JFileChooser.APPROVE_OPTION) {
                             String soubor = dialog.getSelectedFile().getPath();
-                            sklad.uloz(new GsonSerDes(), soubor + ".json");
+                            if(soubor.substring(soubor.length() - 5).equals(".json")) {
+                                sklad.uloz(new GsonSerDes(), soubor);
+                            } else {
+                                sklad.uloz(new GsonSerDes(), soubor + ".json");
+                            }
                             saved = true;
                         }
                     } catch (Exception exp) {
@@ -185,8 +189,9 @@ public class Obchod {
                 }
             }
         });
-        miAbout.addActionListener((e) -> JOptionPane.showMessageDialog(hlavniPanel, "uwoogh",
-                "Herní košík omg Java momentka", JOptionPane.INFORMATION_MESSAGE));
+ 
+        miAbout.addActionListener((e) -> JOptionPane.showMessageDialog(hlavniPanel, "PRO1 Projekt Obchod\nhttps://github.com/Hakurisa/pro1_projekt_obchod",
+                "Obchod program", JOptionPane.INFORMATION_MESSAGE));
         JMenuItem miNactiJson = new JMenuItem("Načti JSON");
         miNactiJson.addActionListener((e) -> {
             try {
@@ -198,7 +203,7 @@ public class Obchod {
                 }
             } catch (Exception exp) {
                 JOptionPane.showMessageDialog(hlavniPanel,
-                        "Při načítání do JSON formátu nastala: "
+                        "Při načítání z JSON formátu nastala: "
                                 + exp.getLocalizedMessage(),
                         "Chyba načítání",
                         JOptionPane.ERROR_MESSAGE);
@@ -212,7 +217,11 @@ public class Obchod {
                 dialog.setFileFilter(new FileNameExtensionFilter("*.json", "json"));
                 if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
                     String soubor = dialog.getSelectedFile().getPath();
-                    sklad.uloz(new GsonSerDes(), soubor + ".json");
+                    if(soubor.substring(soubor.length() - 5).equals(".json")) {
+                        sklad.uloz(new GsonSerDes(), soubor);
+                    } else {
+                        sklad.uloz(new GsonSerDes(), soubor + ".json");
+                    }
                 }
             } catch (Exception exp) {
                 JOptionPane.showMessageDialog(hlavniPanel,
@@ -222,8 +231,50 @@ public class Obchod {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
+        JMenuItem miUlozCSV = new JMenuItem("Ulož CSV jako...");
+        miUlozCSV.addActionListener((e) -> {
+            try {
+                JFileChooser dialog = new JFileChooser(".");
+                dialog.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
+                if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
+                    String soubor = dialog.getSelectedFile().getPath();
+                    if(soubor.substring(soubor.length() - 4).equals(".csv")) {
+                        sklad.uloz(new GsonSerDes(), soubor);
+                    } else {
+                        sklad.uloz(new GsonSerDes(), soubor + ".csv");
+                    }
+                }
+            } catch (Exception exp) {
+                JOptionPane.showMessageDialog(hlavniPanel,
+                        "Při ukládání do CSV formátu nastala: "
+                                + exp.getLocalizedMessage(),
+                        "Chyba ukládání",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        JMenuItem miNactiCSV = new JMenuItem("Načti z CSV");
+        miNactiCSV.addActionListener((e) -> {
+            try {
+                sklad.smazatVsechnoZbozi();
+                JFileChooser dialog = new JFileChooser(".");
+                dialog.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
+                if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
+                    String soubor = dialog.getSelectedFile().getPath();
+                    sklad.nactiZCSV(soubor);;
+                }
+            } catch (Exception exp) {
+                JOptionPane.showMessageDialog(hlavniPanel,
+                        "Při načítání z CSV formátu nastala: "
+                                + exp.getLocalizedMessage(),
+                        "Chyba načítání",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         menuSoubor.add(miNactiJson);
         menuSoubor.add(miUlozJson);
+        menuSoubor.add(miNactiCSV);
+        menuSoubor.add(miUlozCSV);
         nabidka = new JMenuBar();
         nabidka.add(menuSoubor);
         nabidka.add(menuNapoveda);
@@ -295,7 +346,13 @@ public class Obchod {
             lbCena.setText(kosik.cenaCelkem());
         });
         btKup.addActionListener((e) -> {
-            JOptionPane.showMessageDialog(hlavniPanel, "bude brzy", "xdd", JOptionPane.INFORMATION_MESSAGE);
+            if(!kosik.isEmpty()) {
+                JOptionPane.showMessageDialog(hlavniPanel, "Zboží zakoupeno!\nCelková cena: "+kosik.cenaCelkem() +" Kč", "Děkujeme za nákup", JOptionPane.INFORMATION_MESSAGE);
+                kosik.vysypat();
+            } else {
+                JOptionPane.showMessageDialog(hlavniPanel, "Košík je prázdný???", "???", JOptionPane.ERROR_MESSAGE);
+            }
+            lbCena.setText(kosik.cenaCelkem());
         });
 
         JPanel pnTlacitka = new JPanel();
@@ -331,7 +388,11 @@ public class Obchod {
                         dialog.setFileFilter(new FileNameExtensionFilter("*.json", "json"));
                         if (dialog.showSaveDialog(hlavniOkno) == JFileChooser.APPROVE_OPTION) {
                             String soubor = dialog.getSelectedFile().getPath();
-                            obchod.getSklad().uloz(new GsonSerDes(), soubor + ".json");
+                            if(soubor.substring(soubor.length() - 5).equals(".json")) {
+                                obchod.getSklad().uloz(new GsonSerDes(), soubor);
+                            } else {
+                                obchod.getSklad().uloz(new GsonSerDes(), soubor + ".json");
+                            }
                             saved = true;
                         }
                     } catch (Exception exp) {

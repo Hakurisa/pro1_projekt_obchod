@@ -2,6 +2,9 @@ package lib;
 
 import serdes.SerDes;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,42 @@ public class Sklad extends AbstractTableModel {
         }
         return true;
 
+    }
+
+    public void ulozDoCSV(String soubor) {
+        try {
+            FileWriter writer = new FileWriter(soubor);
+            for (Zbozi zbozi : seznamZbozi) {
+                writer.append(zbozi.getNazev() + "," + zbozi.getCena() + "," + zbozi.getPocet());
+                writer.append("\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void nactiZCSV(String soubor) {
+        try {
+            FileReader reader = new FileReader(soubor);
+            BufferedReader br = new BufferedReader(reader);
+
+            String line;
+            while((line = br.readLine())!= null) {
+                String[] values = line.split(",");
+                String nazev = values[0];
+                float cena = Float.parseFloat(values[1]);
+                int pocet = Integer.parseInt(values[2]);
+                Zbozi zbozi = new Zbozi(nazev, cena, pocet);
+                seznamZbozi.add(zbozi);
+            }
+            br.close();
+            reader.close();
+            fireTableDataChanged();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     public void nacti(SerDes serdes, String soubor) throws IOException {
         seznamZbozi = serdes.nacti(soubor);
