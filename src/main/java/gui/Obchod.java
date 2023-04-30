@@ -150,7 +150,6 @@ public class Obchod {
 
         menuSoubor.setText("Soubor");
         miUkoncit.setText("Ukončit");
-        menuSoubor.add(miUkoncit);
         menuNapoveda.setText("Nápověda");
         menuNapoveda.add(miAbout);
         miUkoncit.addActionListener(new ActionListener() {
@@ -254,11 +253,11 @@ public class Obchod {
         JMenuItem miNactiCSV = new JMenuItem("Načti z CSV");
         miNactiCSV.addActionListener((e) -> {
             try {
-                sklad.smazatVsechnoZbozi();
                 JFileChooser dialog = new JFileChooser(".");
                 dialog.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
                 if (dialog.showSaveDialog(panelSkladu) == JFileChooser.APPROVE_OPTION) {
                     String soubor = dialog.getSelectedFile().getPath();
+                    sklad.smazatVsechnoZbozi();
                     sklad.nactiZCSV(soubor);;
                 }
             } catch (Exception exp) {
@@ -274,6 +273,7 @@ public class Obchod {
         menuSoubor.add(miUlozJson);
         menuSoubor.add(miNactiCSV);
         menuSoubor.add(miUlozCSV);
+        menuSoubor.add(miUkoncit);
         nabidka = new JMenuBar();
         nabidka.add(menuSoubor);
         nabidka.add(menuNapoveda);

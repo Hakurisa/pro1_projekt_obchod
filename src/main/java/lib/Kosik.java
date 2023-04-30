@@ -82,7 +82,7 @@ public class Kosik extends AbstractTableModel {
             cena += kos.getCena()*kos.getPocet();
         }
         result = Float.toString(cena);
-        return result;
+        return result + " Kč";
     }
 
     public String getColumnName(int columnIndex) {
