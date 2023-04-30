@@ -119,7 +119,6 @@ public class Obchod {
         btSmaz.addActionListener((e) -> {
             int radek = tabulkaSkladu.getSelectedRow();
             Zbozi zbozi = sklad.getZbozi(radek);
-            System.out.println(radek);
             kosik.odeber(zbozi);
             sklad.smazatZbozi(radek);
             lbCena.setText(kosik.cenaCelkem());
